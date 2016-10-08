@@ -1,0 +1,58 @@
+
+body{
+  margin: 0 auto;
+  width:600px;
+  height:400px;
+  max-height: 400px;
+  max-width: 600px;
+  font-family:'Open Sans',sans-serif;
+}
+
+div h1{
+
+  text-align: center;
+
+}
+
+div.Error  {
+  width: 500px;
+  height: 500px;
+  display: block;
+  position: relative;
+}
+
+ div.Error::after {
+  content: "";
+  background: url(http://www.freeiconspng.com/uploads/error-icon-28.png);
+  background-repeat: no-repeat;
+  background-size: 400px 400px;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+
+ div.GUARDADO{
+  width: 500px;
+  height: 500px;
+  display: block;
+  position: relative;
+}
+
+ div.GUARDADO::after {
+  content: "";
+  background: url(http://www.pd4pic.com/images/green-icon-mark-round-check-correct.png);
+  background-repeat: no-repeat;
+  background-size: 400px 400px;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}

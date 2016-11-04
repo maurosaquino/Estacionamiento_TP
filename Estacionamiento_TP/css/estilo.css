@@ -40,7 +40,8 @@ div#cuerpo #sec_nav {
 div.table-title {
   overflow-y: scroll;
   max-height: 500px;
-  width: 500px;
+  max-width: 1000px;
+  width: 800px;
   margin: auto;
 }
 
@@ -63,7 +64,7 @@ div.table-title {
   border-collapse: collapse;
   height: 200px;
   margin: auto;
-  max-width: 600px;
+  max-width: 1000px;
   padding:5px;
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);

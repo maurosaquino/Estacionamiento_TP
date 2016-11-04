@@ -233,47 +233,7 @@
 			return $planilla;
 		}
 
-		static function GenerarPlanillaU(){
-
-			require_once('AccesoDatos.php');
-			$arrayUsuarios = array();
-			
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		
-			$sql = "SELECT nombre,apellido,email,tipo_acceso FROM usuarios";
-		
-			$consulta = $objetoAccesoDato->RetornarConsulta($sql);
-			$consulta->execute();
-	
-			$arrayUsuarios = $consulta->fetchall();
-
-			$planilla = '<div class="table-title">
-						 <table class="table-fill">
-						 <thead>	
-						 <tr><th class="text-left">NOMBRE</th>
-						 	 <th class="text-left">APELLIDO</th>
-						 	 <th class="text-left">EMAIL</th>
-						 	 <th class="text-left">PERFIL</th>
-						 </thead>
-						 <tbody class="table-hover">';
-
-			foreach($arrayUsuarios as $usuario){
-
-				$planilla=$planilla.'<tr><td class="text-left">'.$usuario[0].'</td>
-										 <td class="text-left">'.$usuario[1].'</td>
-										 <td class="text-left">'.$usuario[2].'</td>
-										 <td class="text-left">'.$usuario[3].'</td>
-									 </tr>';
-		
-			}
-
-			$planilla = $planilla.' </tbody>
-									</table>
-									</div>';
-
-			return $planilla;
-		}
-
 	}
 
 

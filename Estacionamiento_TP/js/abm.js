@@ -114,7 +114,7 @@ function cload(){
 
 	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"cLoad"}}).then(function(exito){
 
-		$("#usuario").html(exito);;
+		$("#usuario").html(exito);
 
 	},function(error){
 
@@ -147,5 +147,51 @@ function LoginTest($t){
 	});
 
 }
+
+function ModificarUsuario($id){
+
+	var usuario = $id;
+
+	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fTraerMod",parametro:usuario}}).then(function(exito){
+
+		$("#contenedor").html(exito);
+
+	},function(error){
+
+		$("#contenedor").html(exito);
+
+	});
+
+}
+
+function GuardarUsuario($id){
+
+	var nombre = $("#nom").val();
+	var apellido = $("#ape").val();
+	var email  = $("#mail").val();
+	var perfil = $("#perf").val();
+	var usuario = $id;
+
+	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fGuarMod",
+											 id:usuario,
+											 nom:nombre,
+											 ape:apellido,
+											 mai:email,
+											 per:perfil}}).then(function(exito){
+
+		$("#contenedor").html(exito);
+		
+		window.setTimeout(function(){
+        MostrarPlanilla(3);
+    	}, 800);
+		
+	},function(error){
+
+		$("#contenedor").html(exito);
+
+	});
+
+}
+
 
 

@@ -10,6 +10,7 @@
 
 		require_once('./class/vehiculo.php');
         require_once('./class/Login.php');
+        require_once('./class/usuario.php');
         
 		switch ($_POST["queHacer"]) {
            
@@ -23,7 +24,7 @@
 
     		case "mLogin":
 
-            if($_SESSION["registrado"]=="si"){
+                if($_SESSION["registrado"]=="si"){
 
                 echo '  <div class="login-page">
                         <div class="form">
@@ -94,13 +95,13 @@
 
                 case 3:
 
-                $retorno = vehiculo::GenerarPlanillaU();
+                $retorno = usuario::GenerarPlanillaU();
                 break;
 
                 }
 
                 echo $retorno;
-            }else{
+                }else{
 
                 echo '  <div class="login-page">
                         <div class="form">
@@ -158,6 +159,43 @@
                         </div>';
 
             break;
+
+            case "fTraerMod":
+
+            if($_SESSION["perfil"]=="ADMIN"){
+
+            echo usuario::ModificarUsuario($_POST["parametro"]); 
+
+            }else{
+
+             echo '  <div class="login-page">
+                        <div class="form">
+                        <h3> ERROR: Solo los administradores pueden modificar usuarios</h3>
+                        </div>
+                        </div>';   
+
+            }
+
+            break;
+
+             case "fGuarMod":
+
+             if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]==""){
+
+                echo '  <div class="login-page">
+                        <div class="form">
+                        <h3> ERROR: Los datos no pueden estar vacios</h3>
+                        </div>
+                        </div>';  
+
+             }else{
+
+             $user = array ($_POST["id"],$_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"]);
+
+             echo usuario::GuardarUsuario($user); 
+             }
+               
+             break;
 
 		}
 	}

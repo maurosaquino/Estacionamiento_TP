@@ -16,65 +16,34 @@
            
             case "cLoad":
 
-            if($_SESSION["registrado"]=="si"){
-                echo '             Logueado como: '.$_SESSION['perfil']; 
-            }
-
+                if($_SESSION["registrado"]=="si"){
+                    echo '             Logueado como: '.$_SESSION['perfil']; 
+                }
             break;
 
     		case "mLogin":
 
                 if($_SESSION["registrado"]=="si"){
 
-                echo '  <div class="login-page">
-                        <div class="form">
-                        <button type="button" onclick=desloguear()>Cerrar Sesion</button>
-                        </div>
-                        </div>';
+                echo include('html/botondeslog.html');
 
 
                }else{
-        		echo '
-                <div class="login-page">
-                    <div class="form">
-                    <form class="login-form">
-                      <input type="text" name="mail" id="mail" placeholder="Ingrese su mail...">
-                      <input  type="password" name="pass" id="pass" placeholder="Ingrese su contraseña...">
-                      <label class="message">Recordarme: <input  type="checkbox" id="recordar"><br></label>
-                      <button type="button" onclick="Login()">Loguearse</button><br><br>
-                      <button type="button" onclick="LoginTest(1)">Test User</button>
-                      <button type="button" onclick="LoginTest(2)">Test Admin</button>
-
-                    </form>
-                  </div>
-                </div>
-        		';}
-            
-        	break;
+        		echo include('html/formlogin.html');
+               }
+            break;
   
     		case "mIngreso":
 
         		if($_SESSION["registrado"]=="si"){
-        		echo '
-                <div class="login-page">
-                <div class="form">
-        		<form class="login-form">
-        		<label class="message">Patente:</label><br><br>	
-        		<input type="text" name="patente" id="patente" placeholder="Ingrese patente..."><br><br>
-        		<button type="button" onclick="Ingresar()">Ingresar</button>
-        		</form>
-                </div>
-                </div>
-        		';}else{
-                  echo  '  <div class="login-page">
-                        <div class="form">
-                        <h3> ERROR: Se debe estar logueado para cargar vehiculos</h3>
-                        <button type="button" onclick= "MostrarLogin()">Loguearse</button>
-                        </div>
-                        </div>';
+        		
+                    echo include('html/formpatente.html');
+                
+                }else{
+                  
+                    echo  include('html/error1.html');
                    
                 }
-
         	break;
 
     		case "mPlanilla":
@@ -103,14 +72,8 @@
                 echo $retorno;
                 }else{
 
-                echo '  <div class="login-page">
-                        <div class="form">
-                        <h3> ERROR: Se debe estar logueado para ver la informacion</h3>
-                        <button type="button" onclick= "MostrarLogin()">Loguearse</button>
-                        </div>
-                        </div>';
-            }
-
+                echo include('html/error2.html');
+                }
         	break;
 
         	case "fLogin":
@@ -119,83 +82,62 @@
         		login::ValidarLogin($logueo);
 
                 echo '             Logueado como: '.$_SESSION['perfil'];        
-
         	break;
 
             case "fIngresar":
 
-            if($_POST["patente"] != ""){
-        	$hi=date('d-m-y H:i:s');
-        	$ve = new vehiculo(strtoupper($_POST["patente"]),$hi);
-			$retorno = vehiculo::IngresarUnVehiculo($ve);
-            echo $retorno;
-            }else{
+                if($_POST["patente"] != ""){
+            	$hi=date('d-m-y H:i:s');
+            	$ve = new vehiculo(strtoupper($_POST["patente"]),$hi);
+    			$retorno = vehiculo::IngresarUnVehiculo($ve);
+                echo $retorno;
+                }else{
 
-            echo '  <div class="login-page">
-                      <div class="form">
-                        <h3> ERROR: La patente no puede estar vacia</h3>
-                        <button type="button" onclick="MostrarIngreso()">Volver</button>
-                        </div>
-                        </div>';
-            }   
-			
-            
-      
+                echo include('html/errorpatente.html');
+                }   
             break;
 
             case "fEgreso":
 
-            echo vehiculo::EgresarVehiculo(strtoupper($_POST["patente"]));
+                $ve = vehiculo::EgresarVehiculo(strtoupper($_POST["patente"]));
 
+                $array = array("p"=>$ve->GetPatente(),"i"=>$ve->GetIngreso(),"e"=>$ve->GetEgreso(),"im"=>$ve->GetImporte());
+
+                echo json_encode($array);
             break;
 
             case "fDlogin":
 
-            echo login::Desloguear();
-             echo '  <div class="login-page">
-                        <div class="form">
-                        <button type="button">Gracias por utilizar el sistema</button>
-                        </div>
-                        </div>';
-
+                echo login::Desloguear();
+                echo include('html/mensajesalida.html');
             break;
 
             case "fTraerMod":
 
-            if($_SESSION["perfil"]=="ADMIN"){
+                if($_SESSION["perfil"]=="ADMIN"){
 
-            echo usuario::ModificarUsuario($_POST["parametro"]); 
+                echo usuario::ModificarUsuario($_POST["parametro"]); 
 
-            }else{
+                }else{
 
-             echo '  <div class="login-page">
-                        <div class="form">
-                        <h3> ERROR: Solo los administradores pueden modificar usuarios</h3>
-                        </div>
-                        </div>';   
+                 echo include('html/errormodusuario.html');   
 
-            }
-
+                }
             break;
 
-             case "fGuarMod":
+            case "fGuarMod":
 
-             if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]==""){
+                 if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]==""){
 
-                echo '  <div class="login-page">
-                        <div class="form">
-                        <h3> ERROR: Los datos no pueden estar vacios</h3>
-                        </div>
-                        </div>';  
+                    echo include('html/errormodusuariovacio.html');  
 
-             }else{
+                 }else{
 
-             $user = array ($_POST["id"],$_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"]);
+                 $user = array ($_POST["id"],$_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"]);
 
-             echo usuario::GuardarUsuario($user); 
-             }
-               
-             break;
+                 echo usuario::GuardarUsuario($user); 
+                 }
+            break;
 
 		}
 	}

@@ -82,14 +82,24 @@ function EgresarVehiculo($pat){
 
 	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fEgreso",patente:$pat}}).then(function(exito){
 
-		$("#contenedor").html(exito);
+		var ret = JSON.parse(exito);
+		console.log(ret);
 
+		$( "#contenedor" ).load( "html/ticket.html" );
+		
+		window.setTimeout(function(){
+        $( "#pt" ).html(ret.p);
+        $( "#in" ).html(ret.i);
+        $( "#eg" ).html(ret.e);
+        $( "#im" ).html(ret.im);
+    	}, 70);
+		
+		
 	},function(error){
 
 		$("#contenedor").html(error);
 
 	});
-
 }
 
 function desloguear(){
@@ -145,7 +155,6 @@ function LoginTest($t){
 		$("#contenedor").html(error);
 
 	});
-
 }
 
 function ModificarUsuario($id){
@@ -161,7 +170,6 @@ function ModificarUsuario($id){
 		$("#contenedor").html(exito);
 
 	});
-
 }
 
 function GuardarUsuario($id){
@@ -190,7 +198,6 @@ function GuardarUsuario($id){
 		$("#contenedor").html(exito);
 
 	});
-
 }
 
 

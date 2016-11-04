@@ -59,19 +59,11 @@
 				$consulta->bindValue(':ingreso',  $ve->GetIngreso(), PDO::PARAM_INT);
 				$consulta->execute();
 		
-				return  '  <div class="login-page">
-                           <div class="form">
-                           <h3> VEHICULO INGRESADO</h3>
- 	                       </div>
-     	                   </div>';
+				return  include('html/confingreso.html');
 
 			}else{
 
-				return  '  <div class="login-page">
-                      	   <div class="form">
-                           <h3> ERROR: El vehiculo ya esta en el estacionamiento</h3>
-                           </div>
-                           </div>';
+				return  include('html/erroringres.html');
 			}
 		}
 
@@ -117,8 +109,7 @@
 					$consulta->bindValue(':imp',  $importe, PDO::PARAM_INT);
 					$consulta->execute();	
 						
-			return vehiculo::GenerarTicket($vehiculoegreso);
-			
+			return $vehiculoegreso;
 		}
 
 		//METODO QUE TRAE TODOS LOS VEHICULOS DE LA BASE DE DATOS
@@ -182,18 +173,6 @@
 									</div>';
 
 			return $planilla;
-		}
-
-		//METODO QUE GENERA EL TICKET AL EGRESO
-		static function GenerarTicket($ve){
-
-			return  '<table>
-					 <tr><th><h3>ESTACIONAMIENTO UTN</h3></th></tr>
-					 <tr><th>Patente: </th><td>'.$ve->GetPatente().'</td></tr>
-					 <tr><th>Ingreso: </th><td>'.$ve->GetIngreso().'</td></tr>
-					 <tr><th>Egreso: </th><td>'.$ve->GetEgreso().'</td></tr>
-					 <tr><th>Importe:</th><td>'.'$'.$ve->GetImporte().'</td></tr>
-					 </table>';
 		}
 
 		//METODO QUE GENERA LA PLANILLA DE IMPORTE POR AUTO

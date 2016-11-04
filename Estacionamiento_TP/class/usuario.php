@@ -132,11 +132,7 @@ class Usuario{
 
 				$consulta->execute();
 
-				return '  <div class="login-page">
-                        <div class="form">
-                        <h3> Usuario modificado</h3>
-                        </div>
-                        </div>';
+				return include('html/confmodifu.html');
 		}	
 }
 

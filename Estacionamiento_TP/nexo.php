@@ -1,72 +1,166 @@
 <?php
+	session_start();
 	date_default_timezone_set('America/Argentina/Buenos_Aires');
+    
+    if(!isset($_SESSION["registrado"])){
+        $_SESSION['registrado'] = "no";
+        }
+ 
+	if(isset($_POST)){
+
+		require_once('./class/vehiculo.php');
+        require_once('./class/Login.php');
+        
+		switch ($_POST["queHacer"]) {
+           
+            case "cLoad":
+
+            if($_SESSION["registrado"]=="si"){
+                echo '             Logueado como: '.$_SESSION['perfil']; 
+            }
+
+            break;
+
+    		case "mLogin":
+
+            if($_SESSION["registrado"]=="si"){
+
+                echo '  <div class="login-page">
+                        <div class="form">
+                        <button type="button" onclick=desloguear()>Cerrar Sesion</button>
+                        </div>
+                        </div>';
 
 
-	if (isset($_POST['accion'])){
+               }else{
+        		echo '
+                <div class="login-page">
+                    <div class="form">
+                    <form class="login-form">
+                      <input type="text" name="mail" id="mail" placeholder="Ingrese su mail...">
+                      <input  type="password" name="pass" id="pass" placeholder="Ingrese su contraseña...">
+                      <label class="message">Recordarme: <input  type="checkbox" id="recordar"><br></label>
+                      <button type="button" onclick="Login()">Loguearse</button><br><br>
+                      <button type="button" onclick="LoginTest(1)">Test User</button>
+                      <button type="button" onclick="LoginTest(2)">Test Admin</button>
 
-		$_accion = $_POST['accion'];
+                    </form>
+                  </div>
+                </div>
+        		';}
+            
+        	break;
+  
+    		case "mIngreso":
 
-		if($_accion=='Estacionar'){
+        		if($_SESSION["registrado"]=="si"){
+        		echo '
+                <div class="login-page">
+                <div class="form">
+        		<form class="login-form">
+        		<label class="message">Patente:</label><br><br>	
+        		<input type="text" name="patente" id="patente" placeholder="Ingrese patente..."><br><br>
+        		<button type="button" onclick="Ingresar()">Ingresar</button>
+        		</form>
+                </div>
+                </div>
+        		';}else{
+                  echo  '  <div class="login-page">
+                        <div class="form">
+                        <h3> ERROR: Se debe estar logueado para cargar vehiculos</h3>
+                        <button type="button" onclick= "MostrarLogin()">Loguearse</button>
+                        </div>
+                        </div>';
+                   
+                }
 
-				$_patente 	= trim(strtoupper($_POST['patente']));
-				
-				require_once('class\estacionamiento.php');
-		
-				$verificacion = estacionamiento::BuscarPatente($_patente);
+        	break;
 
-				if($verificacion == FALSE){
-				
-						estacionamiento::Guardar($_patente);
-						echo 'guardado'; 						
-				
+    		case "mPlanilla":
 
-				} else {
+        		if($_SESSION["registrado"]=="si"){
 
-						$tipoerror = 'errorestacionar';
-						estacionamiento::GenerarError($tipoerror);	
+                switch ($_POST["para"]){    
 
-						//echo 'error'; 
-						
-						var_dump($_POST);
+                case 1:
 
-				}
-		}elseif($_accion=='Sacar'){
+    			$retorno = vehiculo::GenerarPlanillaV();
+                break;
 
-				require_once('class\estacionamiento.php');
+                case 2:
 
-				$_patente 	= trim(strtoupper($_POST['patente']));
+                $retorno = vehiculo::GenerarPlanillaF();
+                break;
 
-				$verificacion = estacionamiento::BuscarPatente($_patente);
-	
-				if($verificacion == TRUE){
+                case 3:
 
-						estacionamiento::Sacar($_patente);
-						
-						echo "comprobante";
+                $retorno = vehiculo::GenerarPlanillaU();
+                break;
 
-						} else {
+                }
 
-						$tipoerror = 'errorsacar';
-						estacionamiento::GenerarError($tipoerror);
-						echo "error";
-	
-				}
-		}elseif($_accion=='Refrescar'){
+                echo $retorno;
+            }else{
 
-				require_once('class\estacionamiento.php');
-				
-				$listautos = array();
-				$listautos = estacionamiento::Leer();
-				estacionamiento::GenerarTabla($listautos);
+                echo '  <div class="login-page">
+                        <div class="form">
+                        <h3> ERROR: Se debe estar logueado para ver la informacion</h3>
+                        <button type="button" onclick= "MostrarLogin()">Loguearse</button>
+                        </div>
+                        </div>';
+            }
 
-				include('html\listado.html');
+        	break;
+
+        	case "fLogin":
+        		
+                $logueo = new login(strtoupper($_POST["user"]),strtoupper($_POST["pass"]),$_POST["recor"]);
+        		login::ValidarLogin($logueo);
+
+                echo '             Logueado como: '.$_SESSION['perfil'];        
+
+        	break;
+
+            case "fIngresar":
+
+            if($_POST["patente"] != ""){
+        	$hi=date('d-m-y H:i:s');
+        	$ve = new vehiculo(strtoupper($_POST["patente"]),$hi);
+			$retorno = vehiculo::IngresarUnVehiculo($ve);
+            echo $retorno;
+            }else{
+
+            echo '  <div class="login-page">
+                      <div class="form">
+                        <h3> ERROR: La patente no puede estar vacia</h3>
+                        <button type="button" onclick="MostrarIngreso()">Volver</button>
+                        </div>
+                        </div>';
+            }   
+			
+            
+      
+            break;
+
+            case "fEgreso":
+
+            echo vehiculo::EgresarVehiculo(strtoupper($_POST["patente"]));
+
+            break;
+
+            case "fDlogin":
+
+            echo login::Desloguear();
+             echo '  <div class="login-page">
+                        <div class="form">
+                        <button type="button">Gracias por utilizar el sistema</button>
+                        </div>
+                        </div>';
+
+            break;
 
 		}
-
 	}
-
-	
-//
 
 
 

@@ -256,6 +256,8 @@ function ElUs($id){
 
 	var usuario = $id;
 
+	var c = confirm("Se va a eliminar el usuario de manera permanete. Confirmar?");
+	if(c){
 	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fElim",parametro:usuario}}).then(function(exito){
 
 		$("#contenedor").html(exito);
@@ -264,7 +266,7 @@ function ElUs($id){
 
 		$("#contenedor").html(exito);
 
-	});
+	});}
 }
 
 

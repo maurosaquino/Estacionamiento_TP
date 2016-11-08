@@ -87,12 +87,12 @@ function EgresarVehiculo($pat){
 
 		$( "#contenedor" ).load( "html/ticket.html" );
 		
-		$( "#contenedor" ).change(function(){
+		setTimeout(function(){
         $( "#pt" ).html(ret.p);
         $( "#in" ).html(ret.i);
         $( "#eg" ).html(ret.e);
         $( "#im" ).html(ret.im);
-    	});
+    	},500);
 		
 		
 	},function(error){

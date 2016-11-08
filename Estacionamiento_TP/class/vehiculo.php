@@ -1,7 +1,7 @@
 <?php
-	
-	class vehiculo{
 
+class vehiculo{
+	
 		private $patente;
 		private $horaingreso;
 		private $horaegreso;
@@ -70,9 +70,10 @@
 		//METODO QUE VALIDA SI EL VEHICULO YA ESTA EN EL ESTACIONAMIENTO
 		
 		static function ValidarIngresoEgreso($pat){
-
+			require_once('traerdata.php');
+			
 			$arrayVehiculos = array();
-			$arrayVehiculos = vehiculo::TraerVehiculos();
+			$arrayVehiculos = traerdata::TraerVehiculos();
 
 			foreach($arrayVehiculos as $vehiculo){
 
@@ -91,9 +92,10 @@
 		static function EgresarVehiculo($pat){
 
 			require_once('AccesoDatos.php');
+			require_once('traerdata.php');
      
-				$vehiculoegreso = vehiculo::BuscarVehiculo($pat);
-				$ahora = date('d-m-y H:i:s');
+				$vehiculoegreso = traerdata::BuscarVehiculo($pat);
+				$ahora = date('Y-M-d H:i:s');
 				$diferencia = strtotime($ahora) - strtotime($vehiculoegreso->GetIngreso());
 
 				$vehiculoegreso->SetEgreso($ahora);
@@ -112,49 +114,11 @@
 			return $vehiculoegreso;
 		}
 
-		//METODO QUE TRAE TODOS LOS VEHICULOS DE LA BASE DE DATOS
-		static function TraerVehiculos(){
-
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		
-			$sql = "SELECT patente, ingreso
-					FROM vehiculo
-					WHERE egreso is null";
-		
-			$consulta = $objetoAccesoDato->RetornarConsulta($sql);
-			$consulta->execute();
-	
-			return $consulta->fetchall();
-		}
-
-		//METODO PARA BUSCAR UN VEHICULO ESPECIFICO
-		static function BuscarVehiculo($pat){
-
-			$arrayvehiculo = array();
-
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		
-			$consulta =$objetoAccesoDato->RetornarConsulta('SELECT patente, ingreso
-					FROM vehiculo
-					WHERE patente =:pat
-					AND  egreso is null');
-				$consulta->bindValue(':pat',$pat, PDO::PARAM_INT);
-				$consulta->execute();	
-				
-			$arrayvehiculo = $consulta->fetchall();
-			
-			$vehiculoencontrado = new vehiculo($arrayvehiculo[0][0],$arrayvehiculo[0][1]);
-			
-			return $vehiculoencontrado;
-		}
-
 		//METODO QUE GENERA LA PLANILLA DE AUTOS ACTUALES
-		static function GenerarPlanillaV(){
+		static function GenerarPlanillaV($array){
 
-			require_once('AccesoDatos.php');
-			$arrayVehiculos = array();
-			$arrayVehiculos = vehiculo::TraerVehiculos();
-
+			$arrayVehiculos = $array;
+			
 			$planilla = '<div class="table-title">
 						 <table class="table-fill">
 						 <thead>	
@@ -176,21 +140,9 @@
 		}
 
 		//METODO QUE GENERA LA PLANILLA DE IMPORTE POR AUTO
-		static function GenerarPlanillaF(){
+		static function GenerarPlanillaF($array){
 
-			require_once('AccesoDatos.php');
-			$arrayVehiculos = array();
-			
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		
-			$sql = "SELECT patente, round(sum(importe_abonado),2) FROM vehiculo 
-					WHERE egreso is not null
-					group by patente";
-		
-			$consulta = $objetoAccesoDato->RetornarConsulta($sql);
-			$consulta->execute();
-	
-			$arrayVehiculos = $consulta->fetchall();
+			$arrayFacturacion = $array;
 
 			$planilla = '<div class="table-title">
 						 <table class="table-fill">
@@ -199,7 +151,7 @@
 						 </thead>
 						 <tbody class="table-hover">';
 
-			foreach($arrayVehiculos as $vehiculo){
+			foreach($arrayFacturacion as $vehiculo){
 
 				$planilla=$planilla.'<tr><td class="text-left">'.$vehiculo[0].'</td><td class="text-left">'.$vehiculo[1].'</td></tr>';
 		
@@ -213,7 +165,7 @@
 		}
 
 		
-	}
+}
 
 
-?>	
+?>

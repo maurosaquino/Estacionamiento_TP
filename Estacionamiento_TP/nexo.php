@@ -5,12 +5,14 @@
     if(!isset($_SESSION["registrado"])){
         $_SESSION['registrado'] = "no";
         }
- 
+
+
 	if(isset($_POST)){
 
 		require_once('./class/vehiculo.php');
         require_once('./class/Login.php');
         require_once('./class/usuario.php');
+        require_once('./class/servicios.php');
         
 		switch ($_POST["queHacer"]) {
            
@@ -50,26 +52,34 @@
 
         		if($_SESSION["registrado"]=="si"){
 
+                $cliente = servicios::generarServicio();
+
                 switch ($_POST["para"]){    
 
                 case 1:
 
-    			$retorno = vehiculo::GenerarPlanillaV();
-                break;
+                    $retorno = servicios::llamarServicio('obtenerVehiculos',$cliente);
+                    echo vehiculo::GenerarPlanillaV($retorno);
+                    
+ 			    break;
 
                 case 2:
 
-                $retorno = vehiculo::GenerarPlanillaF();
+                    $retorno = servicios::llamarServicio('obtenerFacturacion',$cliente);
+                    echo vehiculo::GenerarPlanillaF($retorno);
+
                 break;
 
                 case 3:
 
-                $retorno = usuario::GenerarPlanillaU();
+                    $retorno = servicios::llamarServicio('obtenerUsuarios',$cliente);
+                    echo usuario::GenerarPlanillaU($retorno);
+
                 break;
 
                 }
 
-                echo $retorno;
+                
                 }else{
 
                 echo include('html/error2.html');
@@ -87,7 +97,7 @@
             case "fIngresar":
 
                 if($_POST["patente"] != ""){
-            	$hi=date('d-m-y H:i:s');
+            	$hi=date('Y-M-d H:i:s');
             	$ve = new vehiculo(strtoupper($_POST["patente"]),$hi);
     			$retorno = vehiculo::IngresarUnVehiculo($ve);
                 echo $retorno;

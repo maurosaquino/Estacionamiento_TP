@@ -2,20 +2,10 @@
 
 class Usuario{
 	
-	static function GenerarPlanillaU(){
+	static function GenerarPlanillaU($array){
 
-			require_once('AccesoDatos.php');
-			$arrayUsuarios = array();
-			
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+			$arrayUsuarios = $array;
 		
-			$sql = "SELECT nombre,apellido,email,tipo_acceso,id FROM usuarios";
-		
-			$consulta = $objetoAccesoDato->RetornarConsulta($sql);
-			$consulta->execute();
-	
-			$arrayUsuarios = $consulta->fetchall();
-
 			$planilla = '<div class="table-title">
 						 <table class="table-fill">
 						 <thead>	
@@ -134,6 +124,14 @@ class Usuario{
 
 				return include('html/confmodifu.html');
 		}	
+
+
+
+		static function TraerV(){
+
+			return "Hola";
+		}
+
 }
 
 

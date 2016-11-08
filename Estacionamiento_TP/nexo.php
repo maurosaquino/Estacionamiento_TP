@@ -13,7 +13,7 @@
         require_once('./class/Login.php');
         require_once('./class/usuario.php');
         require_once('./class/servicios.php');
-        
+
 		switch ($_POST["queHacer"]) {
            
             case "cLoad":
@@ -74,6 +74,10 @@
 
                     $retorno = servicios::llamarServicio('obtenerUsuarios',$cliente);
                     echo usuario::GenerarPlanillaU($retorno);
+
+                    if($_SESSION["perfil"]=='ADMIN'){
+                    echo include('html/botoncu.html');
+                    }   
 
                 break;
 
@@ -137,16 +141,59 @@
 
             case "fGuarMod":
 
-                 if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]==""){
+                 if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]=="" || $_POST["cla"]==""){
 
                     echo include('html/errormodusuariovacio.html');  
 
                  }else{
 
-                 $user = array ($_POST["id"],$_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"]);
+                 $user = array ($_POST["id"],$_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"],$_POST["cla"]);
 
                  echo usuario::GuardarUsuario($user); 
                  }
+            break;
+
+            case "mformC":
+
+            include('html/formalta.html');
+
+            break;
+
+            case "gUNuev":
+
+                 if($_POST["nom"]=="" || $_POST["ape"]=="" || $_POST["mai"]=="" || $_POST["per"]==""){
+
+                    $resul = 'no';  
+                    $npas = '0';
+
+                 }else{
+
+                    $npas = servicios::randomPassword();
+                     $user = array ($_POST["nom"],$_POST["ape"],$_POST["mai"],$_POST["per"],$npas);
+
+                     usuario::InsertarUsuario($user);
+                     $resul='ok';
+                      
+
+                 }
+
+                 $array=array("pass"=>$npas,"resul"=>$resul);
+
+                 echo json_encode($array);
+
+            break;
+
+            case 'fElim':
+
+                 if($_SESSION["perfil"]=='ADMIN'){
+                usuario::ElimUser($_POST["parametro"]);
+
+                echo include('html/confelim.html');
+            }else{
+
+                echo include('html/errormodusuario.html');  
+            }
+
             break;
 
 		}

@@ -85,14 +85,13 @@ function EgresarVehiculo($pat){
 		var ret = JSON.parse(exito);
 		console.log(ret);
 
-		$( "#contenedor" ).load( "html/ticket.html" );
+		$( "#contenedor" ).load( "html/ticket.html",function(){
+														        $( "#pt" ).html(ret.p);
+														        $( "#in" ).html(ret.i);
+														        $( "#eg" ).html(ret.e);
+														        $( "#im" ).html(ret.im);
+														    	});
 		
-		setTimeout(function(){
-        $( "#pt" ).html(ret.p);
-        $( "#in" ).html(ret.i);
-        $( "#eg" ).html(ret.e);
-        $( "#im" ).html(ret.im);
-    	},500);
 		
 		
 	},function(error){
@@ -178,6 +177,7 @@ function GuardarUsuario($id){
 	var apellido = $("#ape").val();
 	var email  = $("#mail").val();
 	var perfil = $("#perf").val();
+	var clave =  $("#clav").val();
 	var usuario = $id;
 
 	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fGuarMod",
@@ -185,7 +185,8 @@ function GuardarUsuario($id){
 											 nom:nombre,
 											 ape:apellido,
 											 mai:email,
-											 per:perfil}}).then(function(exito){
+											 per:perfil,
+											 cla:clave}}).then(function(exito){
 
 		$("#contenedor").html(exito);
 		
@@ -193,6 +194,72 @@ function GuardarUsuario($id){
         MostrarPlanilla(3);
     	}, 800);
 		
+	},function(error){
+
+		$("#contenedor").html(exito);
+
+	});
+}
+
+function MostrarFormC(){
+
+	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"mformC"}}).then(function(exito){
+
+		$("#contenedor").html(exito);
+
+	},function(error){
+
+		$("#contenedor").html(exito);
+
+	});
+
+
+}
+
+function CrearUsuario(){
+
+	var nombre = $("#nom").val();
+	var apellido = $("#ape").val();
+	var email  = $("#mail").val();
+	var perfil = $("#perf").val();
+
+	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"gUNuev",
+											 nom:nombre,
+											 ape:apellido,
+											 mai:email,
+											 per:perfil,
+											}}).then(function(exito){
+
+		var t = JSON.parse(exito);
+		console.log(t);
+
+		if(t.resul=='ok'){
+
+		$("#contenedor" ).load( "html/confaltau.html",function(){
+														        $( "#psw" ).html(t.pass);
+														        });
+		}else{
+
+		$("#contenedor").load("html/errormodusuariovacio.html");	
+
+		}
+
+	},function(error){
+
+		$("#contenedor").html(exito);
+
+	});
+
+}
+
+function ElUs($id){
+
+	var usuario = $id;
+
+	$.ajax({url:"nexo.php",type:"post",data:{queHacer:"fElim",parametro:usuario}}).then(function(exito){
+
+		$("#contenedor").html(exito);
+
 	},function(error){
 
 		$("#contenedor").html(exito);

@@ -179,6 +179,20 @@ td.text-right {
     color: #D8D8D8;
 }
 
+#boton_tablab{
+    float: right;
+    padding: 10px 20px;
+    color: #fff;
+    text-transform: uppercase;
+    font: bold 10px Arial, Helvetica;
+    text-decoration: none;
+    background-color: #4CAF50;
+    background-image: linear-gradient(#444, #111);
+    border: 0px;
+    border-radius: 10px;
+    margin-right:600px;
+}
+
 /*------------------------------------------FORM LOGIN--------------------------------------------*/
 
 .login-page {
